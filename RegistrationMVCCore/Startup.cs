@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RegistrationMVCCore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace RegistrationMVCCore
 {
@@ -22,6 +24,10 @@ namespace RegistrationMVCCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=MVCLoginDB;Trusted_Connection=True;";
+            services.AddDbContext<OurDbContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +44,8 @@ namespace RegistrationMVCCore
             }
 
             app.UseStaticFiles();
+            app.UseSession();
+
 
             app.UseMvc(routes =>
             {
